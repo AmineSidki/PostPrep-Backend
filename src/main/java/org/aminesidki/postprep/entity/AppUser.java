@@ -22,7 +22,7 @@ public class AppUser {
     @NonNull
     private String password;
 
-    @OneToOne
+    @ManyToOne
     @NonNull
     private Role role;
 }

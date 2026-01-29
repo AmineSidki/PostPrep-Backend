@@ -56,7 +56,6 @@ public class RoleMapper {
             for(AppUser sub : entity.getUsers()) {
                 dto.getUsers().add(sub.getId());
             }
-
         }
 
         return dto;
