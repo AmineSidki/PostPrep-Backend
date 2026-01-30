@@ -18,7 +18,7 @@ public class AppUserDTO implements Serializable {
     private String username;
     private String email;
     private String password;
-    private Long role;
+    private String role;
 
 }
 

@@ -28,9 +28,8 @@ public class AppUserMapper {
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
 
-        // Mapping association: Role
         if (dto.getRole() != null) {
-            entity.setRole(roleRepo.findById(dto.getRole()).orElseThrow(() -> new RuntimeException("Role not found !")));
+            entity.setRole(roleRepo.findByRoleTitle(dto.getRole().toUpperCase()).orElseThrow(() -> new RuntimeException("Role not found !")));
         }
 
         return entity;
@@ -49,7 +48,7 @@ public class AppUserMapper {
         dto.setPassword(entity.getPassword());
 
         if (entity.getRole() != null) {
-            dto.setRole(entity.getRole().getId());
+            dto.setRole(entity.getRole().getRoleTitle());
         }
 
         return dto;

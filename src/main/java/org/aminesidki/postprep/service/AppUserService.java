@@ -1,11 +1,19 @@
 package org.aminesidki.postprep.service;
 
+import lombok.NonNull;
+import org.aminesidki.postprep.dto.RegisterRequestDTO;
 import org.aminesidki.postprep.entity.AppUser;
 import org.aminesidki.postprep.dto.AppUserDTO;
+import org.aminesidki.postprep.entity.Role;
+import org.aminesidki.postprep.exception.NotFoundException;
 import org.aminesidki.postprep.mapper.AppUserMapper;
 import org.aminesidki.postprep.repository.AppUserRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.aminesidki.postprep.repository.RoleRepository;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +28,8 @@ import java.util.UUID;
 public class AppUserService{
     private final AppUserRepository repository;
     private final AppUserMapper mapper;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public AppUserDTO findById(UUID id) {
         return repository.findById(id)
@@ -45,6 +55,46 @@ public class AppUserService{
             throw new RuntimeException("Cannot delete: AppUser not found with id: " + id);
         }
         repository.deleteById(id);
+    }
+
+
+    public AppUserDTO findByEmail(@NonNull String email) {
+        return repository.findByEmail(email)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new RuntimeException("AppUser not found with email: " + email));
+    }
+
+    @Transactional
+    public void register(RegisterRequestDTO request) {
+        if (repository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        Role defaultRole = roleRepository.findByRoleTitle("USER")
+                .orElseThrow(() -> new RuntimeException("Default Role not found"));
+
+        AppUser user = new AppUser();
+        user.setUsername(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(defaultRole);
+
+        repository.save(user);
+    }
+
+    public AppUser findByRefreshToken(String refreshToken) {
+        return repository.findByRefreshToken(refreshToken)
+                .orElseThrow(() -> new NotFoundException("User not foun"));
+    }
+
+    public void updateRefreshToken(String email, String token) {
+        AppUser appUser = mapper.toEntity(findByEmail(email));
+        appUser.setRefreshToken(token);
+        repository.save(appUser);
+    }
+
+    public void logout(UUID userId) {
+        repository.invalidateRefreshToken(userId);
     }
 }
 
