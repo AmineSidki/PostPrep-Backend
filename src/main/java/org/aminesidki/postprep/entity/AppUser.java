@@ -25,4 +25,7 @@ public class AppUser {
     @ManyToOne
     @NonNull
     private Role role;
+
+    @Column(length = 1024)
+    private String refreshToken;
 }

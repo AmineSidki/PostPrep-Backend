@@ -9,4 +9,13 @@ spring:
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
     show-sql: true
+
+jwt:
+    access-token-expiration-duration: 1h
+    access-token-public-key: classpath:certs/public.pem
+    refresh-token-expiration-duration: 7d
+    access-token-private-key: classpath:certs/private.pem
+
