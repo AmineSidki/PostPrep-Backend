@@ -17,7 +17,9 @@ spring:
           tokenizer-uri: https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/main/tokenizer.json
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postprep
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://host.docker.internal:5432/postprep
+
     username: postgres
     password: root
   jpa:
