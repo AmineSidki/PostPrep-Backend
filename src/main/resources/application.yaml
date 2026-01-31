@@ -1,9 +1,25 @@
 spring:
   application:
-      name: PostPrep
+    name: PostPrep
+
+
+  ai:
+    huggingface:
+      api-key: ${HUGGINGFACE_API_KEY}
+      chat:
+        base-url: https://router.huggingface.co/v1
+        options:
+          model: Qwen/Qwen2.5-7B-Instruct
+    embedding:
+      transformer:
+        onnx:
+          model-uri: https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/main/onnx/model.onnx
+          tokenizer-uri: https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/main/tokenizer.json
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://host.docker.internal:5432/postprep
+
     username: postgres
     password: root
   jpa:
@@ -12,6 +28,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
 
 jwt:
     access-token-expiration-duration: 1h
