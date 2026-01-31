@@ -3,7 +3,7 @@ spring:
       name: PostPrep
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postprep
+    url: jdbc:postgresql://host.docker.internal:5432/postprep
     username: postgres
     password: root
   jpa:

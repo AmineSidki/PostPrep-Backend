@@ -1,7 +1,10 @@
 package org.aminesidki.postprep.mapper;
 
+import org.aminesidki.postprep.entity.AppUser;
 import org.aminesidki.postprep.entity.Article;
 import org.aminesidki.postprep.dto.ArticleDTO;
+import org.aminesidki.postprep.exception.NotFoundException;
+import org.aminesidki.postprep.repository.AppUserRepository;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +17,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class ArticleMapper {
-
+    private final AppUserRepository appUserRepository;
     public Article toEntity(ArticleDTO dto) {
         if (dto == null) {
             return null;
@@ -26,6 +29,7 @@ public class ArticleMapper {
         entity.setTitle(dto.getTitle());
         entity.setContent(dto.getContent());
         entity.setLanguage(dto.getLanguage());
+        entity.setOwner(appUserRepository.findById(dto.getOwner()).orElseThrow(() -> new NotFoundException("User with id " + dto.getOwner() + "not found !")));
         entity.setCreatedAt(dto.getCreatedAt());
 
 
@@ -43,6 +47,7 @@ public class ArticleMapper {
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
         dto.setLanguage(entity.getLanguage());
+        dto.setOwner(entity.getOwner().getId());
         dto.setCreatedAt(entity.getCreatedAt());
 
 
