@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.aminesidki.postprep.enumeration.Role;
 
 import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,10 +23,11 @@ public class AppUser {
     private String email;
     @NonNull
     private String password;
-
-    @ManyToOne
     @NonNull
     private Role role;
+    @NonNull
+    @OneToMany
+    private List<Article> articles;
 
     @Column(length = 1024)
     private String refreshToken;

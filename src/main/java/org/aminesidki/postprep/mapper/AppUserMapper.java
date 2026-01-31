@@ -2,11 +2,14 @@ package org.aminesidki.postprep.mapper;
 
 import org.aminesidki.postprep.entity.AppUser;
 import org.aminesidki.postprep.dto.AppUserDTO;
+import org.aminesidki.postprep.entity.Article;
+import org.aminesidki.postprep.exception.NotFoundException;
+import org.aminesidki.postprep.repository.ArticleRepository;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.UUID;
-import org.aminesidki.postprep.repository.RoleRepository;
 
 /**
 * Mapper for {@link org.aminesidki.postprep.entity.AppUser }
@@ -14,7 +17,7 @@ import org.aminesidki.postprep.repository.RoleRepository;
 @Component
 @RequiredArgsConstructor
 public class AppUserMapper {
-    private final RoleRepository roleRepo;
+    private final ArticleRepository articleRepository;
 
     public AppUser toEntity(AppUserDTO dto) {
         if (dto == null) {
@@ -27,9 +30,11 @@ public class AppUserMapper {
         entity.setUsername(dto.getUsername());
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
+        entity.setRole(dto.getRole());
 
-        if (dto.getRole() != null) {
-            entity.setRole(roleRepo.findByRoleTitle(dto.getRole().toUpperCase()).orElseThrow(() -> new RuntimeException("Role not found !")));
+        entity.setArticles(new ArrayList<>());
+        for(UUID id : dto.getArticles()){
+            entity.getArticles().add(articleRepository.findById(id).orElseThrow(() -> new NotFoundException("Article with id " + id + "not found !")));
         }
 
         return entity;
@@ -46,9 +51,11 @@ public class AppUserMapper {
         dto.setUsername(entity.getUsername());
         dto.setEmail(entity.getEmail());
         dto.setPassword(entity.getPassword());
+        dto.setRole(entity.getRole());
 
-        if (entity.getRole() != null) {
-            dto.setRole(entity.getRole().getRoleTitle());
+        dto.setArticles(new ArrayList<>());
+        for(Article a : entity.getArticles()){
+            dto.getArticles().add(a.getId());
         }
 
         return dto;

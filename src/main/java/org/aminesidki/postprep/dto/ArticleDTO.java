@@ -19,6 +19,7 @@ public class ArticleDTO implements Serializable {
     private String title;
     private String content;
     private String language;
+    private UUID owner;
     private Timestamp createdAt;
 
 }

@@ -1,8 +1,11 @@
 package org.aminesidki.postprep.dto;
 
 import lombok.*;
+import org.aminesidki.postprep.enumeration.Role;
+
 import java.io.Serializable;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,7 +21,8 @@ public class AppUserDTO implements Serializable {
     private String username;
     private String email;
     private String password;
-    private String role;
+    private Role role;
+    private List<UUID> articles;
 
 }
 

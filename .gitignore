@@ -59,6 +59,9 @@ ehthumbs.db
 Thumbs.db
 
 ### Secrets & Env (Optional but recommended) ###
+certs/
 .env
 secrets.yml
 application-local.properties
+
+.gitignore

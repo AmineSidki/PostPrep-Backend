@@ -4,22 +4,18 @@ import lombok.NonNull;
 import org.aminesidki.postprep.dto.RegisterRequestDTO;
 import org.aminesidki.postprep.entity.AppUser;
 import org.aminesidki.postprep.dto.AppUserDTO;
-import org.aminesidki.postprep.entity.Role;
+import org.aminesidki.postprep.enumeration.Role;
 import org.aminesidki.postprep.exception.NotFoundException;
 import org.aminesidki.postprep.mapper.AppUserMapper;
 import org.aminesidki.postprep.repository.AppUserRepository;
 
 import lombok.RequiredArgsConstructor;
-import org.aminesidki.postprep.repository.RoleRepository;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 import java.util.UUID;
 
@@ -28,7 +24,6 @@ import java.util.UUID;
 public class AppUserService{
     private final AppUserRepository repository;
     private final AppUserMapper mapper;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     public AppUserDTO findById(UUID id) {
@@ -70,21 +65,18 @@ public class AppUserService{
             throw new RuntimeException("Email already exists");
         }
 
-        Role defaultRole = roleRepository.findByRoleTitle("USER")
-                .orElseThrow(() -> new RuntimeException("Default Role not found"));
-
         AppUser user = new AppUser();
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(defaultRole);
+        user.setRole(Role.USER);
 
         repository.save(user);
     }
 
     public AppUser findByRefreshToken(String refreshToken) {
         return repository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new NotFoundException("User not foun"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public void updateRefreshToken(String email, String token) {
