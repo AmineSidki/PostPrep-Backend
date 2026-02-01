@@ -12,7 +12,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtException;
@@ -29,7 +28,7 @@ import java.util.stream.Stream;
 @Component
 @RequiredArgsConstructor
 public class JwtCookieFilter extends OncePerRequestFilter {
-
+    private final CustomUserDetailsService userDetailsService;
     private final JwtDecoder jwtDecoder;
 
     @Override
@@ -51,7 +50,7 @@ public class JwtCookieFilter extends OncePerRequestFilter {
                     SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
 
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userEmail,
+                            userDetailsService.loadUserByUsername(userEmail),
                             null,
                             List.of(authority)
                     );

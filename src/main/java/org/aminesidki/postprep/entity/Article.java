@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.aminesidki.postprep.enumeration.Status;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -19,18 +20,23 @@ public class Article {
     @Id
     private UUID id;
 
-    @NonNull
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String title;
-    @NonNull
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
-    @NonNull
     private String language;
     @ManyToOne
     private AppUser owner;
+    @NonNull
+    private Status status;
 
     @CreationTimestamp
     private Timestamp createdAt;
 
+    @Lob
     @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "TEXT")
     private OutputJson outputJson;
 }

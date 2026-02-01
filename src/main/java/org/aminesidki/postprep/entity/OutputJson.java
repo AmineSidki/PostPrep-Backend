@@ -3,7 +3,7 @@ package org.aminesidki.postprep.entity;
 import java.util.List;
 
 public record OutputJson(String summary ,
-                         String category ,
+                         List<String> categories ,
                          String seoTitle ,
-                         Integer confidenceScore ,
+                         Double confidenceScore ,
                          List<String> keywords) {}

@@ -1,7 +1,9 @@
 package org.aminesidki.postprep.service;
 
+import org.aminesidki.postprep.dto.AppUserDTO;
 import org.aminesidki.postprep.entity.Article;
 import org.aminesidki.postprep.dto.ArticleDTO;
+import org.aminesidki.postprep.mapper.AppUserMapper;
 import org.aminesidki.postprep.mapper.ArticleMapper;
 import org.aminesidki.postprep.repository.ArticleRepository;
 
@@ -11,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 import java.util.UUID;
 
@@ -19,32 +20,47 @@ import java.util.UUID;
 @Service
 public class ArticleService{
     private final ArticleRepository repository;
-    private final ArticleMapper mapper;
+    private final ArticleMapper articleMapper;
+    private final AppUserMapper userMapper;
 
+    @Transactional
     public ArticleDTO findById(UUID id) {
         return repository.findById(id)
-                .map(mapper::toDto)
+                .map(articleMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
     }
 
+    @Transactional
     public List< ArticleDTO> findAll() {
         return repository.findAll().stream()
-                .map(mapper::toDto)
+                .map(articleMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ArticleDTO> findAllByOwner(AppUserDTO owner){
+        return repository.findByOwner(userMapper.toEntity(owner)).stream()
+                .map(articleMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public ArticleDTO save(ArticleDTO dto) {
-        Article entity = mapper.toEntity(dto);
-        return mapper.toDto(repository.save(entity));
+        Article entity = articleMapper.toEntity(dto);
+        return articleMapper.toDto(repository.save(entity));
     }
 
     @Transactional
-    public void delete(UUID id) {
+    public boolean delete(AppUserDTO user , UUID id) {
         if (!repository.existsById(id)) {
             throw new RuntimeException("Cannot delete: Article not found with id: " + id);
         }
+
+        if(repository.findById(id).get().getOwner().getId() != user.getId()){
+            return false;
+        }
         repository.deleteById(id);
+        return true;
     }
 }
 
