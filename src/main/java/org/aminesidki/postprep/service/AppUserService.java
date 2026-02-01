@@ -59,6 +59,12 @@ public class AppUserService{
                 .orElseThrow(() -> new RuntimeException("AppUser not found with email: " + email));
     }
 
+    public AppUserDTO findByEmailWithArticles(@NonNull String email){
+        return repository.findByEmailWithArticles(email)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new RuntimeException("AppUser not found with email: " + email));
+    }
+
     @Transactional
     public void register(RegisterRequestDTO request) {
         if (repository.existsByEmail(request.getEmail())) {

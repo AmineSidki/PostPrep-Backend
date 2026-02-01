@@ -1,6 +1,9 @@
 package org.aminesidki.postprep.dto;
 
 import lombok.*;
+import org.aminesidki.postprep.entity.OutputJson;
+import org.aminesidki.postprep.enumeration.Status;
+
 import java.io.Serializable;
 
 import java.sql.Timestamp;
@@ -20,6 +23,8 @@ public class ArticleDTO implements Serializable {
     private String content;
     private String language;
     private UUID owner;
+    private Status status;
+    private OutputJson outputJson;
     private Timestamp createdAt;
 
 }

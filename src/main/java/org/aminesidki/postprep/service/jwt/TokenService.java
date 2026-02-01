@@ -83,7 +83,7 @@ public class TokenService {
         }
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails.getUsername(), null, userDetails.getAuthorities());
+                userDetails, null, userDetails.getAuthorities());
 
         return generateToken(authentication);
     }
