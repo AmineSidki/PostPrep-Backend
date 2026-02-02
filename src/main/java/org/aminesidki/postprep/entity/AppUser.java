@@ -24,7 +24,6 @@ public class AppUser {
     private String password;
     @NonNull
     private Role role;
-    @NonNull
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
