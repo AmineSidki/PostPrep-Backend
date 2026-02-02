@@ -11,12 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import java.util.UUID;
@@ -57,11 +52,9 @@ public class ArticleService{
 
     @Transactional
     public boolean delete(AppUserDTO user , UUID id) {
-        if (!repository.existsById(id)) {
-            throw new RuntimeException("Cannot delete: Article not found with id: " + id);
-        }
-
-        if(repository.findById(id).get().getOwner().getId() != user.getId()){
+        if(repository.findById(id).orElseThrow(() -> new RuntimeException("Cannot delete: Article not found with id " + id))
+                .getOwner()
+                .getId() != user.getId()){
             return false;
         }
         repository.deleteById(id);

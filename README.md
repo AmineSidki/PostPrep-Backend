@@ -1,8 +1,8 @@
 ---
 title: PostPrep
 emoji: 📝 
-colorFrom: blue
-colorTo: indigo
+colorFrom: red
+colorTo: purple
 sdk: docker
 app_port: 8080
 ---
