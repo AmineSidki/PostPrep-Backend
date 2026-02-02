@@ -37,7 +37,7 @@ spring:
 
 jwt:
     access-token-expiration-duration: 1h
-    access-token-public-key: classpath:certs/public.pem
+    access-token-public-key: ${PUBLIC_KEY}
     refresh-token-expiration-duration: 7d
-    access-token-private-key: classpath:certs/private.pem
+    access-token-private-key: ${PRIVATE_KEY}
 
