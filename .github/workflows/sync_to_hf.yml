@@ -16,6 +16,9 @@ jobs:
           fetch-depth: 0
           lfs: true
 
+      - name: Prepare README for Hugging Face
+        run: echo hf_README.md > README.md
+
       - name: deploy
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
