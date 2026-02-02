@@ -27,7 +27,7 @@ public class AppUser {
     @NonNull
     private Role role;
     @NonNull
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Article> articles;
 
