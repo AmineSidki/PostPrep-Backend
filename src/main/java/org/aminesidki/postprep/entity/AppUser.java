@@ -2,9 +2,7 @@ package org.aminesidki.postprep.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import org.aminesidki.postprep.enumeration.Role;
 
 import java.util.UUID;
@@ -27,7 +25,9 @@ public class AppUser {
     @NonNull
     private Role role;
     @NonNull
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Article> articles;
 
