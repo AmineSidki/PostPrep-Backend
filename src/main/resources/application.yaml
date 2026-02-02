@@ -18,10 +18,10 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://host.docker.internal:5432/postprep
+    url: ${DB_URL}
 
-    username: postgres
-    password: root
+    username: ${DB_USR}
+    password: ${DB_PWD}
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
