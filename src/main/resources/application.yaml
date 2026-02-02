@@ -21,7 +21,7 @@ spring:
     url: jdbc:postgresql://host.docker.internal:5432/postprep
 
     username: postgres
-    password: root
+    password: 123
   jpa:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect

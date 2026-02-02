@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 
 import java.util.UUID;
 
+import static org.aminesidki.postprep.enumeration.Role.ADMIN;
+
 @RequiredArgsConstructor
 @Service
 public class AppUserService{
@@ -59,6 +61,11 @@ public class AppUserService{
                 .orElseThrow(() -> new RuntimeException("AppUser not found with email: " + email));
     }
 
+    public AppUser findUserByEmail(@NonNull String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("AppUser not found with email: " + email));
+    }
+
     public AppUserDTO findByEmailWithArticles(@NonNull String email){
         return repository.findByEmailWithArticles(email)
                 .map(mapper::toDto)
@@ -86,13 +93,33 @@ public class AppUserService{
     }
 
     public void updateRefreshToken(String email, String token) {
-        AppUser appUser = mapper.toEntity(findByEmail(email));
+        AppUser appUser = findUserByEmail(email);
         appUser.setRefreshToken(token);
         repository.save(appUser);
     }
 
     public void logout(UUID userId) {
         repository.invalidateRefreshToken(userId);
+    }
+
+    public long  count() {
+        return repository.count();
+    }
+
+    @Transactional
+    public AppUserDTO updateUser(UUID id, AppUserDTO dto) {
+        AppUser user = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+        if(dto.getUsername() != null) {
+            user.setUsername(dto.getUsername());
+        }
+        if(dto.getEmail() != null && !dto.getEmail().equals(user.getEmail())) {
+            if(repository.existsByEmail(dto.getEmail())) {
+                throw new RuntimeException("Email already exists");
+            }
+            user.setEmail(dto.getEmail());
+        }
+
+        return mapper.toDto(repository.save(user));
     }
 }
 
