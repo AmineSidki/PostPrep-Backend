@@ -54,18 +54,20 @@ public class AppUserService{
         repository.deleteById(id);
     }
 
-
+    @Transactional
     public AppUserDTO findByEmail(@NonNull String email) {
         return repository.findByEmail(email)
                 .map(mapper::toDto)
                 .orElseThrow(() -> new RuntimeException("AppUser not found with email: " + email));
     }
 
+    @Transactional
     public AppUser findUserByEmail(@NonNull String email) {
         return repository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("AppUser not found with email: " + email));
     }
 
+    @Transactional
     public AppUserDTO findByEmailWithArticles(@NonNull String email){
         return repository.findByEmailWithArticles(email)
                 .map(mapper::toDto)
