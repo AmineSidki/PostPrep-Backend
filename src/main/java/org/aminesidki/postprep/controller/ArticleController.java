@@ -2,7 +2,9 @@ package org.aminesidki.postprep.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.aminesidki.postprep.dto.ArticleDTO;
+import org.aminesidki.postprep.enumeration.Role;
 import org.aminesidki.postprep.enumeration.Status;
+import org.aminesidki.postprep.exception.Unauthorized;
 import org.aminesidki.postprep.security.CustomUserDetails;
 import org.aminesidki.postprep.service.ArticleService;
 import org.aminesidki.postprep.service.TextProcessingService;
@@ -16,15 +18,31 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/upload")
+@RequestMapping("/api/v1/article")
 public class ArticleController {
     private final ArticleService articleService;
     private final TextProcessingService textProcessingService;
 
-    @PostMapping("/pdf")
+    @GetMapping("/all")
+    public List<ArticleDTO> getAll(@AuthenticationPrincipal CustomUserDetails user){
+        if(!user.getAppUser().getRole().equals(Role.ADMIN)){
+            throw new Unauthorized("");
+        }
+
+        return articleService.findAll();
+    }
+
+    @PostMapping("/upload/pdf")
     public ArticleDTO uploadPdf(@AuthenticationPrincipal CustomUserDetails user, @RequestBody MultipartFile pdfFile){
         ArticleDTO articleDto = articleService.save(ArticleDTO.builder().status(Status.PROCESSING).owner(user.getAppUser().getId()).build());
-        textProcessingService.ocrAndProcess(pdfFile , articleDto.getId());
+        textProcessingService.processPdf(pdfFile , articleDto.getId());
+        return articleDto;
+    }
+
+    @PostMapping("/upload/text")
+    public ArticleDTO uploadText(@AuthenticationPrincipal CustomUserDetails user, @RequestBody String text){
+        ArticleDTO articleDto = articleService.save(ArticleDTO.builder().status(Status.PROCESSING).owner(user.getAppUser().getId()).build());
+        textProcessingService.processText(text , articleDto.getId());
         return articleDto;
     }
 

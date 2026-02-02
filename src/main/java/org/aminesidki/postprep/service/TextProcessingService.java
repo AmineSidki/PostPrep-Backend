@@ -40,9 +40,8 @@ public class TextProcessingService {
     private static final Pattern JSON_BLOCK_PATTERN = Pattern.compile("```(?:json)?\\s*(\\{.*?\\})\\s*```", Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     @Async
-    public void ocrAndProcess(MultipartFile file , UUID documentId){
-        String scanned = ocrService.scannedDocument(file);
-        AnalysisResponse processedString = process(scanned);
+    public void processText(String text ,UUID documentId){
+        AnalysisResponse processedString = process(text);
 
         ArticleDTO articleDTO =  articleService.findById(documentId);
         articleDTO.setStatus(Status.PROCESSED);
@@ -51,13 +50,19 @@ public class TextProcessingService {
         articleDTO.setLanguage(processedString.data.language());
 
         OutputJson outputJson = new OutputJson(processedString.data.summary(),
-                                                processedString.data.categories(),
-                                                processedString.data.seoTitle(),
-                                                processedString.confidenceScore,
-                                                processedString.data.keywords());
+                processedString.data.categories(),
+                processedString.data.seoTitle(),
+                processedString.confidenceScore,
+                processedString.data.keywords());
 
         articleDTO.setOutputJson(outputJson);
-        ArticleDTO dto = articleService.save(articleDTO);
+        articleService.save(articleDTO);
+    }
+
+    @Async
+    public void processPdf(MultipartFile file , UUID documentId){
+        String scanned = ocrService.scannedDocument(file);
+        processText(scanned , documentId);
     }
 
     public AnalysisResponse process(String rawOcrText) {
