@@ -76,9 +76,10 @@ public class TokenService {
     }
 
     public Token login(LoginRequestDTO loginRequest) {
+        AppUser user =appUserService.findUserByEmail(loginRequest.getEmail());
         CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(loginRequest.getEmail());
 
-        if (!passwordEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new Unauthorized("Invalid Credentials");
         }
 
@@ -86,5 +87,13 @@ public class TokenService {
                 userDetails, null, userDetails.getAuthorities());
 
         return generateToken(authentication);
+    }
+
+    public void logout(Authentication authentication) {
+        if (authentication == null) {
+            return;
+        }
+        String email = authentication.getName();
+        appUserService.updateRefreshToken(email, null);
     }
 }

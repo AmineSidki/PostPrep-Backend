@@ -29,7 +29,6 @@ public class AppUserMapper {
         entity.setId(dto.getId());
         entity.setUsername(dto.getUsername());
         entity.setEmail(dto.getEmail());
-        entity.setPassword(dto.getPassword());
         entity.setRole(dto.getRole());
 
         entity.setArticles(new ArrayList<>());
@@ -50,7 +49,6 @@ public class AppUserMapper {
         dto.setId(entity.getId());
         dto.setUsername(entity.getUsername());
         dto.setEmail(entity.getEmail());
-        dto.setPassword(entity.getPassword());
         dto.setRole(entity.getRole());
 
         dto.setArticles(new ArrayList<>());

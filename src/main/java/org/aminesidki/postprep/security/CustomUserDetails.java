@@ -20,13 +20,13 @@ public class CustomUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Role role = appUser.getRole();
         return (role != null)
-                ? List.of(new SimpleGrantedAuthority(role.toString()))
+                ? List.of(new SimpleGrantedAuthority("ROLE_"+ role))
                 : List.of();
     }
 
     @Override
     public String getPassword() {
-        return appUser.getPassword();
+        return "";
     }
 
     @Override

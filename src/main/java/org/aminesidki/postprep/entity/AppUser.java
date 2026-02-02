@@ -1,5 +1,6 @@
 package org.aminesidki.postprep.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
@@ -26,7 +27,8 @@ public class AppUser {
     @NonNull
     private Role role;
     @NonNull
-    @OneToMany
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Article> articles;
 
     @Column(length = 1024)
