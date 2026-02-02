@@ -32,6 +32,28 @@ public class ArticleController {
         return articleService.findAll();
     }
 
+    @GetMapping("/myArticles")
+    public List<ArticleDTO> getMyArticles(@AuthenticationPrincipal CustomUserDetails user){
+        return articleService.findAllByOwner(user.getAppUser());
+    }
+
+    @GetMapping("/{id}")
+    public ArticleDTO getArticle(@AuthenticationPrincipal CustomUserDetails user , @PathVariable UUID id){
+        if(!user.getAppUser().getRole().equals(Role.ADMIN)){
+            throw new Unauthorized("");
+        }
+
+        return articleService.findById(id);
+    }
+
+    @GetMapping("/myArticles/{id}")
+    public ArticleDTO getMyArticle(@AuthenticationPrincipal CustomUserDetails user , @PathVariable UUID id){
+        if(articleService.findById(id).getOwner() == user.getAppUser().getId()){
+            return articleService.findById(id);
+        }
+        throw new Unauthorized("");
+    }
+
     @PostMapping("/upload/pdf")
     public ArticleDTO uploadPdf(@AuthenticationPrincipal CustomUserDetails user, @RequestBody MultipartFile pdfFile){
         ArticleDTO articleDto = articleService.save(ArticleDTO.builder().status(Status.PROCESSING).owner(user.getAppUser().getId()).build());
@@ -46,10 +68,6 @@ public class ArticleController {
         return articleDto;
     }
 
-    @GetMapping("/myArticles")
-    public List<ArticleDTO> getMyArticles(@AuthenticationPrincipal CustomUserDetails user){
-        return articleService.findAllByOwner(user.getAppUser());
-    }
 
     @DeleteMapping("/delete/{postId}")
     public ResponseEntity<?> deleteArticle(@AuthenticationPrincipal CustomUserDetails user , @PathVariable UUID postId){

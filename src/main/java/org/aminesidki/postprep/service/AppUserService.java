@@ -54,7 +54,6 @@ public class AppUserService{
         repository.deleteById(id);
     }
 
-    @Transactional
     public AppUserDTO findByEmail(@NonNull String email) {
         return repository.findByEmail(email)
                 .map(mapper::toDto)
@@ -94,6 +93,7 @@ public class AppUserService{
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
+    @Transactional
     public void updateRefreshToken(String email, String token) {
         AppUser appUser = findUserByEmail(email);
         appUser.setRefreshToken(token);
