@@ -3,7 +3,6 @@ name: Sync to Hugging Face Hub
 on:
   push:
     branches: [main]
-
   workflow_dispatch:
 
 jobs:
@@ -16,10 +15,17 @@ jobs:
           fetch-depth: 0
           lfs: true
 
-      - name: Prepare README for Hugging Face
-        run: echo hf_README.md > README.md
+      - name: Swap README and Commit
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
 
-      - name: deploy
+          cp hf_README.md README.md
+
+          git add README.md
+          git commit -m "Setup HF README for sync"
+
+      - name: Deploy to Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
