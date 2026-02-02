@@ -41,22 +41,27 @@ public class TextProcessingService {
 
     @Async
     public void processText(String text ,UUID documentId){
-        AnalysisResponse processedString = process(text);
+            AnalysisResponse processedString = process(text);
 
-        ArticleDTO articleDTO =  articleService.findById(documentId);
-        articleDTO.setStatus(Status.PROCESSED);
-        articleDTO.setTitle(processedString.data.title());
-        articleDTO.setContent(processedString.data.cleanedContent());
-        articleDTO.setLanguage(processedString.data.language());
+            ArticleDTO articleDTO =  articleService.findById(documentId);
+        try{
+            articleDTO.setStatus(Status.PROCESSED);
+            articleDTO.setTitle(processedString.data.title());
+            articleDTO.setContent(processedString.data.cleanedContent());
+            articleDTO.setLanguage(processedString.data.language());
 
-        OutputJson outputJson = new OutputJson(processedString.data.summary(),
-                processedString.data.categories(),
-                processedString.data.seoTitle(),
-                processedString.confidenceScore,
-                processedString.data.keywords());
+            OutputJson outputJson = new OutputJson(processedString.data.summary(),
+                    processedString.data.categories(),
+                    processedString.data.seoTitle(),
+                    processedString.confidenceScore,
+                    processedString.data.keywords());
 
-        articleDTO.setOutputJson(outputJson);
-        articleService.save(articleDTO);
+            articleDTO.setOutputJson(outputJson);
+            articleService.save(articleDTO);
+        }catch(Exception e){
+            articleDTO.setStatus(Status.INTERRUPTED);
+        }
+
     }
 
     @Async
