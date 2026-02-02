@@ -31,7 +31,7 @@ public class AppUserService{
     public AppUserDTO findById(UUID id) {
         return repository.findById(id)
                 .map(mapper::toDto)
-                .orElseThrow(() -> new RuntimeException("AppUser not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("AppUser not found with id: " + id));
     }
 
     public List< AppUserDTO> findAll() {
@@ -49,7 +49,7 @@ public class AppUserService{
     @Transactional
     public void delete(UUID id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException("Cannot delete: AppUser not found with id: " + id);
+            throw new NotFoundException("Cannot delete: AppUser not found with id: " + id);
         }
         repository.deleteById(id);
     }
@@ -57,20 +57,20 @@ public class AppUserService{
     public AppUserDTO findByEmail(@NonNull String email) {
         return repository.findByEmail(email)
                 .map(mapper::toDto)
-                .orElseThrow(() -> new RuntimeException("AppUser not found with email: " + email));
+                .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
     }
 
     @Transactional
     public AppUser findUserByEmail(@NonNull String email) {
         return repository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("AppUser not found with email: " + email));
+                .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
     }
 
     @Transactional
     public AppUserDTO findByEmailWithArticles(@NonNull String email){
         return repository.findByEmailWithArticles(email)
                 .map(mapper::toDto)
-                .orElseThrow(() -> new RuntimeException("AppUser not found with email: " + email));
+                .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
     }
 
     @Transactional
