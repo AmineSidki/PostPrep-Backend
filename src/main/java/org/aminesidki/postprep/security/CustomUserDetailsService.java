@@ -16,7 +16,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final AppUserService appUserService;
 
     public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
-        AppUserDTO appUser = appUserService.findByEmailWithArticles(email);
+        AppUserDTO appUser = appUserService.findByEmail(email);
         return new CustomUserDetails(appUser);
     }
 }

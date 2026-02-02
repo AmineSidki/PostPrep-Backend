@@ -51,7 +51,9 @@ public class ArticleController {
         if(articleService.findById(id).getOwner() == user.getAppUser().getId()){
             return articleService.findById(id);
         }
-        throw new Unauthorized("");
+        else{
+            throw new Unauthorized("");
+        }
     }
 
     @PostMapping("/upload/pdf")
