@@ -31,11 +31,12 @@ public class AppUserMapper {
         entity.setEmail(dto.getEmail());
         entity.setRole(dto.getRole());
 
-        entity.setArticles(new ArrayList<>());
-        for(UUID id : dto.getArticles()){
-            entity.getArticles().add(articleRepository.findById(id).orElseThrow(() -> new NotFoundException("Article with id " + id + "not found !")));
+        if(dto.getArticles() != null ) {
+            entity.setArticles(new ArrayList<>());
+            for(UUID id : dto.getArticles()){
+                entity.getArticles().add(articleRepository.findById(id).orElseThrow(() -> new NotFoundException("Article with id " + id + "not found !")));
+            }
         }
-
         return entity;
     }
 
@@ -51,9 +52,11 @@ public class AppUserMapper {
         dto.setEmail(entity.getEmail());
         dto.setRole(entity.getRole());
 
-        dto.setArticles(new ArrayList<>());
-        for(Article a : entity.getArticles()){
-            dto.getArticles().add(a.getId());
+        if(entity.getArticles() != null){
+            dto.setArticles(new ArrayList<>());
+            for(Article a : entity.getArticles()){
+                dto.getArticles().add(a.getId());
+            }
         }
 
         return dto;

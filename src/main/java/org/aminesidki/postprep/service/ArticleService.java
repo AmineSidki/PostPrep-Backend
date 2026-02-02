@@ -18,39 +18,35 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class ArticleService{
     private final ArticleRepository repository;
     private final ArticleMapper articleMapper;
     private final AppUserMapper userMapper;
 
-    @Transactional
     public ArticleDTO findById(UUID id) {
         return repository.findById(id)
                 .map(articleMapper::toDto)
                 .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
     }
 
-    @Transactional
     public List< ArticleDTO> findAll() {
         return repository.findAll().stream()
                 .map(articleMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public List<ArticleDTO> findAllByOwner(AppUserDTO owner){
         return repository.findByOwner(userMapper.toEntity(owner)).stream()
                 .map(articleMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public ArticleDTO save(ArticleDTO dto) {
         Article entity = articleMapper.toEntity(dto);
         return articleMapper.toDto(repository.save(entity));
     }
 
-    @Transactional
     public boolean delete(AppUserDTO user , UUID id) {
         if(repository.findById(id).orElseThrow(() -> new RuntimeException("Cannot delete: Article not found with id " + id))
                 .getOwner()
@@ -61,7 +57,6 @@ public class ArticleService{
         return true;
     }
 
-    @Transactional
     public void deleteById(UUID id) {
         repository.deleteById(id);
     }
