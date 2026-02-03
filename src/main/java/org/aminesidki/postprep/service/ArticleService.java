@@ -49,7 +49,7 @@ public class ArticleService{
     }
 
     public boolean delete(AppUserDTO user , UUID id) {
-        if(repository.findById(id).orElseThrow(() -> new NotFoundException("Cannot delete: Article not found with id " + id))
+        if(!repository.findById(id).orElseThrow(() -> new NotFoundException("Cannot delete: Article not found with id " + id))
                 .getOwner()
                 .getId().equals(user.getId())){
             return false;
