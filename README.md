@@ -60,8 +60,7 @@ The system leverages an **LLM** to analyze the input text and generate a structu
 | --- | --- | --- |
 | GET | `/all` | Retrieve all public articles |
 | GET | `/myArticles` | Retrieve your personal library |
-| GET | `/{id}` | Fetch a specific public article |
-| GET | `/myArticles/{id}` | Fetch a specific article you own |
+| GET | `/{id}` | Fetch a specific article |
 
 ### Processing
 
