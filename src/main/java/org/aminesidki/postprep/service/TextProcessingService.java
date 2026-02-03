@@ -58,7 +58,6 @@ public class TextProcessingService {
             articleDTO.setOutputJson(outputJson);
             articleService.save(articleDTO);
         }catch(Exception e){
-            System.out.println(e);
             articleDTO.setStatus(Status.INTERRUPTED);
             articleService.save(articleDTO);
         }
@@ -71,7 +70,6 @@ public class TextProcessingService {
             String scanned = ocrService.scannedDocument(file);
             processText(scanned , documentId);
         }catch(Exception e){
-            System.out.println(e);
             ArticleDTO articleDTO = articleService.findById(documentId);
             articleDTO.setStatus(Status.INTERRUPTED);
             articleService.save(articleDTO);
