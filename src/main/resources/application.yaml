@@ -41,3 +41,11 @@ jwt:
     refresh-token-expiration-duration: 7d
     access-token-private-key: ${PRIVATE_KEY}
 
+logging:
+    level:
+      org:
+        springframework:
+          security: TRACE
+          web:
+            FilterChainProxy: DEBUG
+
