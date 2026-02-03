@@ -41,12 +41,6 @@ public class AppUserService{
     }
 
     @Transactional
-    public AppUserDTO save(AppUserDTO dto) {
-        AppUser entity = mapper.toEntity(dto);
-        return mapper.toDto(repository.save(entity));
-    }
-
-    @Transactional
     public void delete(UUID id) {
         if (!repository.existsById(id)) {
             throw new NotFoundException("Cannot delete: AppUser not found with id: " + id);
@@ -60,7 +54,6 @@ public class AppUserService{
                 .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
     }
 
-    @Transactional
     public AppUser findUserByEmail(@NonNull String email) {
         return repository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
