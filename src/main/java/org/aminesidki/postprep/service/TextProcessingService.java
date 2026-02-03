@@ -41,10 +41,9 @@ public class TextProcessingService {
 
     @Async
     public void processText(String text ,UUID documentId){
-            AnalysisResponse processedString = process(text);
-
             ArticleDTO articleDTO =  articleService.findById(documentId);
         try{
+            AnalysisResponse processedString = process(text);
             articleDTO.setStatus(Status.PROCESSED);
             articleDTO.setTitle(processedString.data.title());
             articleDTO.setContent(processedString.data.cleanedContent());
@@ -60,14 +59,21 @@ public class TextProcessingService {
             articleService.save(articleDTO);
         }catch(Exception e){
             articleDTO.setStatus(Status.INTERRUPTED);
+            articleService.save(articleDTO);
         }
 
     }
 
     @Async
     public void processPdf(MultipartFile file , UUID documentId){
-        String scanned = ocrService.scannedDocument(file);
-        processText(scanned , documentId);
+        try {
+            String scanned = ocrService.scannedDocument(file);
+            processText(scanned , documentId);
+        }catch(Exception e){
+            ArticleDTO articleDTO = articleService.findById(documentId);
+            articleDTO.setStatus(Status.INTERRUPTED);
+            articleService.save(articleDTO);
+        }
     }
 
     public AnalysisResponse process(String rawOcrText) {

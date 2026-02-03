@@ -51,7 +51,7 @@ public class AppUserMapper {
         dto.setUsername(entity.getUsername());
         dto.setEmail(entity.getEmail());
         dto.setRole(entity.getRole());
-        
+
         return dto;
     }
 }
