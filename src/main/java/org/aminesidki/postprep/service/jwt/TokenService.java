@@ -1,19 +1,15 @@
 package org.aminesidki.postprep.service.jwt;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.aminesidki.postprep.dto.LoginRequestDTO;
 import org.aminesidki.postprep.entity.AppUser;
 import org.aminesidki.postprep.exception.Unauthorized;
-import org.aminesidki.postprep.mapper.AppUserMapper;
 import org.aminesidki.postprep.properties.JwtProperties;
 import org.aminesidki.postprep.security.CustomUserDetails;
 import org.aminesidki.postprep.security.CustomUserDetailsService;
 import org.aminesidki.postprep.service.AppUserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -21,8 +17,6 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

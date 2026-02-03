@@ -40,7 +40,6 @@ public class AppUserService{
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public void delete(UUID id) {
         if (!repository.existsById(id)) {
             throw new NotFoundException("Cannot delete: AppUser not found with id: " + id);
@@ -59,14 +58,6 @@ public class AppUserService{
                 .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
     }
 
-    @Transactional
-    public AppUserDTO findByEmailWithArticles(@NonNull String email){
-        return repository.findByEmailWithArticles(email)
-                .map(mapper::toDto)
-                .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
-    }
-
-    @Transactional
     public void register(RegisterRequestDTO request) {
         if (repository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
@@ -86,7 +77,6 @@ public class AppUserService{
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
-    @Transactional
     public void updateRefreshToken(String email, String token) {
         AppUser appUser = findUserByEmail(email);
         appUser.setRefreshToken(token);
@@ -101,7 +91,6 @@ public class AppUserService{
         return repository.count();
     }
 
-    @Transactional
     public AppUserDTO updateUser(UUID id, AppUserDTO dto) {
         AppUser user = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
         if(dto.getUsername() != null) {

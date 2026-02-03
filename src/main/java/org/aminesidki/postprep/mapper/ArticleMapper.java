@@ -1,6 +1,5 @@
 package org.aminesidki.postprep.mapper;
 
-import org.aminesidki.postprep.entity.AppUser;
 import org.aminesidki.postprep.entity.Article;
 import org.aminesidki.postprep.dto.ArticleDTO;
 import org.aminesidki.postprep.exception.NotFoundException;
@@ -8,8 +7,6 @@ import org.aminesidki.postprep.repository.AppUserRepository;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
-import java.sql.Timestamp;
-import java.util.UUID;
 
 /**
 * Mapper for {@link org.aminesidki.postprep.entity.Article }
