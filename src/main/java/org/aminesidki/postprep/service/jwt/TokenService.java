@@ -76,7 +76,7 @@ public class TokenService {
     }
 
     public Token login(LoginRequestDTO loginRequest) {
-        AppUser user =appUserService.findUserByEmail(loginRequest.getEmail());
+        AppUser user = appUserService.findUserByEmail(loginRequest.getEmail());
         CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(loginRequest.getEmail());
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {

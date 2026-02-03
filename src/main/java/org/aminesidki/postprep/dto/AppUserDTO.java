@@ -21,7 +21,6 @@ public class AppUserDTO implements Serializable {
     private String username;
     private String email;
     private Role role;
-    private List<UUID> articles;
 
 }
 

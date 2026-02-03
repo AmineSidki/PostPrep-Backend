@@ -39,20 +39,11 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     public ArticleDTO getArticle(@AuthenticationPrincipal CustomUserDetails user , @PathVariable UUID id){
-        if(!user.getAppUser().getRole().equals(Role.ADMIN)){
-            throw new Unauthorized("");
-        }
-
-        return articleService.findById(id);
-    }
-
-    @GetMapping("/myArticles/{id}")
-    public ArticleDTO getMyArticle(@AuthenticationPrincipal CustomUserDetails user , @PathVariable UUID id){
-        if(articleService.findById(id).getOwner() == user.getAppUser().getId()){
+        System.out.println(id);
+        if(articleService.findById(id).getOwner() == user.getAppUser().getId() || user.getAppUser().getRole() == Role.ADMIN){
             return articleService.findById(id);
-        }else{
-            throw new Unauthorized("");
         }
+        throw new Unauthorized("");
     }
 
     @PostMapping("/upload/pdf")
