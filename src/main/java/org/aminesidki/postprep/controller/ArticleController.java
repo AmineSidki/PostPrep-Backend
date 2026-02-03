@@ -50,8 +50,7 @@ public class ArticleController {
     public ArticleDTO getMyArticle(@AuthenticationPrincipal CustomUserDetails user , @PathVariable UUID id){
         if(articleService.findById(id).getOwner() == user.getAppUser().getId()){
             return articleService.findById(id);
-        }
-        else{
+        }else{
             throw new Unauthorized("");
         }
     }
