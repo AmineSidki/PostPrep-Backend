@@ -2,9 +2,7 @@ package org.aminesidki.postprep.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.aminesidki.postprep.dto.ArticleDTO;
-import org.aminesidki.postprep.enumeration.Role;
 import org.aminesidki.postprep.enumeration.Status;
-import org.aminesidki.postprep.exception.Unauthorized;
 import org.aminesidki.postprep.security.CustomUserDetails;
 import org.aminesidki.postprep.service.ArticleService;
 import org.aminesidki.postprep.service.TextProcessingService;
@@ -25,11 +23,8 @@ public class ArticleController {
     private final TextProcessingService textProcessingService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ArticleDTO> getAll(@AuthenticationPrincipal CustomUserDetails user){
-        if(!user.getAppUser().getRole().equals(Role.ADMIN)){
-            throw new Unauthorized("");
-        }
-
         return articleService.findAll();
     }
 

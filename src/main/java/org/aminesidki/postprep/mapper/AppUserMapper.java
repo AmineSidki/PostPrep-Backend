@@ -2,14 +2,9 @@ package org.aminesidki.postprep.mapper;
 
 import org.aminesidki.postprep.entity.AppUser;
 import org.aminesidki.postprep.dto.AppUserDTO;
-import org.aminesidki.postprep.entity.Article;
-import org.aminesidki.postprep.exception.NotFoundException;
 import org.aminesidki.postprep.repository.ArticleRepository;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.UUID;
 
 /**
 * Mapper for {@link org.aminesidki.postprep.entity.AppUser }
