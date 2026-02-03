@@ -9,6 +9,7 @@ import org.aminesidki.postprep.security.CustomUserDetails;
 import org.aminesidki.postprep.service.ArticleService;
 import org.aminesidki.postprep.service.TextProcessingService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,12 +39,9 @@ public class ArticleController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #articleService.findById(#id).owner == user.appUser.id")
     public ArticleDTO getArticle(@AuthenticationPrincipal CustomUserDetails user , @PathVariable UUID id){
-        System.out.println(id);
-        if(articleService.findById(id).getOwner() == user.getAppUser().getId() || user.getAppUser().getRole() == Role.ADMIN){
-            return articleService.findById(id);
-        }
-        throw new Unauthorized("");
+        return articleService.findById(id);
     }
 
     @PostMapping("/upload/pdf")
@@ -65,6 +63,6 @@ public class ArticleController {
     public ResponseEntity<?> deleteArticle(@AuthenticationPrincipal CustomUserDetails user , @PathVariable UUID postId){
         return articleService.delete(user.getAppUser() , postId) ?
                 ResponseEntity.ok().build() :
-                ResponseEntity.badRequest().build();
+                ResponseEntity.status(403).build();
     }
 }

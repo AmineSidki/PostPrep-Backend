@@ -3,6 +3,7 @@ package org.aminesidki.postprep.service;
 import org.aminesidki.postprep.dto.AppUserDTO;
 import org.aminesidki.postprep.entity.Article;
 import org.aminesidki.postprep.dto.ArticleDTO;
+import org.aminesidki.postprep.exception.NotFoundException;
 import org.aminesidki.postprep.mapper.AppUserMapper;
 import org.aminesidki.postprep.mapper.ArticleMapper;
 import org.aminesidki.postprep.repository.ArticleRepository;
@@ -27,7 +28,7 @@ public class ArticleService{
     public ArticleDTO findById(UUID id) {
         return repository.findById(id)
                 .map(articleMapper::toDto)
-                .orElseThrow(() -> new RuntimeException("Article not found with id: " + id));
+                .orElseThrow(() -> new NotFoundException("Article not found with id: " + id));
     }
 
     public List< ArticleDTO> findAll() {
@@ -48,9 +49,9 @@ public class ArticleService{
     }
 
     public boolean delete(AppUserDTO user , UUID id) {
-        if(repository.findById(id).orElseThrow(() -> new RuntimeException("Cannot delete: Article not found with id " + id))
+        if(repository.findById(id).orElseThrow(() -> new NotFoundException("Cannot delete: Article not found with id " + id))
                 .getOwner()
-                .getId() != user.getId()){
+                .getId().equals(user.getId())){
             return false;
         }
         repository.deleteById(id);
