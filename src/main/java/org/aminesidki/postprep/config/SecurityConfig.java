@@ -24,7 +24,6 @@ public class SecurityConfig {
     private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
-    @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -32,8 +31,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/logout").authenticated()
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
-                        )
+                )
 
                 .userDetailsService(customUserDetailsService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -43,27 +43,4 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    @Order(1)
-    public SecurityFilterChain adminSecurity(HttpSecurity http) throws Exception {
-        http
-                .securityMatcher("/admin/**")
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(AbstractHttpConfigurer::disable)
-
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/admin/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/admin/logout").authenticated()
-                        .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
-                        .anyRequest().authenticated()
-                )
-
-                .formLogin(AbstractHttpConfigurer::disable)
-
-                .logout(AbstractHttpConfigurer::disable)
-
-                .addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
 }
