@@ -1,6 +1,7 @@
 package org.aminesidki.postprep.service;
 
 import org.aminesidki.postprep.dto.AppUserDTO;
+import org.aminesidki.postprep.dto.LiteArticleDTO;
 import org.aminesidki.postprep.dto.ChartDataDTO;
 import org.aminesidki.postprep.entity.Article;
 import org.aminesidki.postprep.dto.ArticleDTO;
@@ -40,10 +41,8 @@ public class ArticleService{
                 .collect(Collectors.toList());
     }
 
-    public List<ArticleDTO> findAllByOwner(AppUserDTO owner){
-        return repository.findByOwner(userMapper.toEntity(owner)).stream()
-                .map(articleMapper::toDto)
-                .collect(Collectors.toList());
+    public List<LiteArticleDTO> findAllByOwner(AppUserDTO owner){
+        return repository.findByOwner(userMapper.toEntity(owner));
     }
 
     public ArticleDTO save(ArticleDTO dto) {

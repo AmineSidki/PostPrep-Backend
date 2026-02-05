@@ -46,7 +46,6 @@ public class TextProcessingService {
             AnalysisResponse processedString = process(text);
             articleDTO.setStatus(Status.PROCESSED);
             articleDTO.setTitle(processedString.data.title());
-            articleDTO.setContent(processedString.data.cleanedContent());
             articleDTO.setLanguage(processedString.data.language());
 
             OutputJson outputJson = new OutputJson(processedString.data.summary(),

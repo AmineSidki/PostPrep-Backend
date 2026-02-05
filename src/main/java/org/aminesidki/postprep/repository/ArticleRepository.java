@@ -1,5 +1,6 @@
 package org.aminesidki.postprep.repository;
 
+import org.aminesidki.postprep.dto.LiteArticleDTO;
 import org.aminesidki.postprep.entity.AppUser;
 import org.aminesidki.postprep.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +17,7 @@ import java.util.UUID;
 */
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
-    List<Article> findByOwner(AppUser user);
+    List<LiteArticleDTO> findByOwner(AppUser user);
 
     @Query(value = "SELECT TO_CHAR(created_at, 'YYYY-MM-DD') as dateLabel, COUNT(*) as count " +
             "FROM article " +
