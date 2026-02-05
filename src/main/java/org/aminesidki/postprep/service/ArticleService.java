@@ -2,6 +2,7 @@ package org.aminesidki.postprep.service;
 
 import org.aminesidki.postprep.dto.AppUserDTO;
 import org.aminesidki.postprep.dto.LiteArticleDTO;
+import org.aminesidki.postprep.dto.ChartDataDTO;
 import org.aminesidki.postprep.entity.Article;
 import org.aminesidki.postprep.dto.ArticleDTO;
 import org.aminesidki.postprep.exception.NotFoundException;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,6 +67,36 @@ public class ArticleService{
     public long  count() {
         return repository.count();
     }
+
+    public List<ChartDataDTO> getDailyArticleStats() {
+        LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+        Timestamp startDate = Timestamp.valueOf(thirtyDaysAgo);
+
+        List<Object[]> rawData = repository.countArticlesPerDay(startDate);
+
+        return mapToDTO(rawData);
+    }
+
+    public List<ChartDataDTO> getMonthlyArticleStats() {
+        LocalDateTime oneYearAgo = LocalDateTime.now().minusMonths(12);
+        Timestamp startDate = Timestamp.valueOf(oneYearAgo);
+
+        List<Object[]> rawData = repository.countArticlesPerMonth(startDate);
+
+        return mapToDTO(rawData);
+    }
+
+    private List<ChartDataDTO> mapToDTO(List<Object[]> rawData) {
+        return rawData.stream()
+                .map(row -> new ChartDataDTO(
+                        (String) row[0],                // Cast du Label (Date)
+                        ((Number) row[1]).longValue()   // Cast sécurisé du Count (BigInt -> Long)
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+
 
 }
 
