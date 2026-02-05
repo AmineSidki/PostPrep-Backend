@@ -20,7 +20,6 @@ public class ArticleDTO implements Serializable {
 
     private UUID id;
     private String title;
-    private String content;
     private String language;
     private UUID owner;
     private Status status;

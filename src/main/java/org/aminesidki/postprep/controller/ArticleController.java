@@ -2,6 +2,7 @@ package org.aminesidki.postprep.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.aminesidki.postprep.dto.ArticleDTO;
+import org.aminesidki.postprep.dto.LiteArticleDTO;
 import org.aminesidki.postprep.enumeration.Status;
 import org.aminesidki.postprep.security.CustomUserDetails;
 import org.aminesidki.postprep.service.ArticleService;
@@ -24,12 +25,12 @@ public class ArticleController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<ArticleDTO> getAll(@AuthenticationPrincipal CustomUserDetails user){
+    public List<ArticleDTO> getAll(){
         return articleService.findAll();
     }
 
     @GetMapping("/myArticles")
-    public List<ArticleDTO> getMyArticles(@AuthenticationPrincipal CustomUserDetails user){
+    public List<LiteArticleDTO> getMyArticles(@AuthenticationPrincipal CustomUserDetails user){
         return articleService.findAllByOwner(user.getAppUser());
     }
 

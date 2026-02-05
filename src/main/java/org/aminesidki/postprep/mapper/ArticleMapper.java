@@ -24,7 +24,6 @@ public class ArticleMapper {
 
         entity.setId(dto.getId());
         entity.setTitle(dto.getTitle());
-        entity.setContent(dto.getContent());
         entity.setLanguage(dto.getLanguage());
         entity.setOwner(appUserRepository.findById(dto.getOwner()).orElseThrow(() -> new NotFoundException("User with id " + dto.getOwner() + "not found !")));
         entity.setOutputJson(dto.getOutputJson());
@@ -44,7 +43,6 @@ public class ArticleMapper {
 
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
-        dto.setContent(entity.getContent());
         dto.setLanguage(entity.getLanguage());
         dto.setOwner(entity.getOwner().getId());
         dto.setOutputJson(entity.getOutputJson());

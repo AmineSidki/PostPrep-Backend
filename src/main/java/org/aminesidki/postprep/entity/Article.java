@@ -20,12 +20,10 @@ public class Article {
     @Id
     private UUID id;
 
+    @Basic(fetch = FetchType.LAZY)
     @Lob
     @Column(columnDefinition = "TEXT")
     private String title;
-    @Lob
-    @Column(columnDefinition = "TEXT")
-    private String content;
     private String language;
     @ManyToOne
     private AppUser owner;
@@ -36,6 +34,7 @@ public class Article {
     private Timestamp createdAt;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "TEXT")
     private OutputJson outputJson;
