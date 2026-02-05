@@ -43,11 +43,8 @@ public class ArticleService{
                 .collect(Collectors.toList());
     }
 
-    public List<LiteArticleDTO> findAllByOwner(AppUserDTO owner){
-        return repository.findByOwner(userMapper.toEntity(owner))
-                .stream()
-                .map(liteArticleMapper::toDto)
-                .collect(Collectors.toList());
+    public List<LiteArticleDTO> findAllByOwner(AppUserDTO owner) {
+        return repository.findByOwner(userMapper.toEntity(owner));
     }
 
     public ArticleDTO save(ArticleDTO dto) {
