@@ -44,7 +44,9 @@ public class ArticleService{
     }
 
     public List<LiteArticleDTO> findAllByOwner(AppUserDTO owner){
-        return articleRepository.findByOwner(userMapper.toEntity(owner));
+        return articleRepository.findByOwner(userMapper.toEntity(owner)).stream()
+                .map(liteArticleMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public ArticleDTO save(ArticleDTO dto) {
