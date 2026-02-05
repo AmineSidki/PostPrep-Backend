@@ -8,6 +8,7 @@ import org.aminesidki.postprep.dto.ArticleDTO;
 import org.aminesidki.postprep.exception.NotFoundException;
 import org.aminesidki.postprep.mapper.AppUserMapper;
 import org.aminesidki.postprep.mapper.ArticleMapper;
+import org.aminesidki.postprep.mapper.LiteArticleMapper;
 import org.aminesidki.postprep.repository.ArticleRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.UUID;
 public class ArticleService{
     private final ArticleRepository repository;
     private final ArticleMapper articleMapper;
+    private final LiteArticleMapper liteArticleMapper;
     private final AppUserMapper userMapper;
 
     public ArticleDTO findById(UUID id) {
@@ -42,7 +44,10 @@ public class ArticleService{
     }
 
     public List<LiteArticleDTO> findAllByOwner(AppUserDTO owner){
-        return repository.findByOwner(userMapper.toEntity(owner));
+        return repository.findByOwner(userMapper.toEntity(owner))
+                .stream()
+                .map(liteArticleMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public ArticleDTO save(ArticleDTO dto) {
