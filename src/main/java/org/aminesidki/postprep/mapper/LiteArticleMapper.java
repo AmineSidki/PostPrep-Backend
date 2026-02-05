@@ -11,13 +11,10 @@ public class LiteArticleMapper {
             return null;
         }
 
-        LiteArticleDTO dto = new LiteArticleDTO();
+        return new LiteArticleDTO(entity.getId(),
+                                                entity.getTitle(),
+                                                entity.getOwner().getId(),
+                                                entity.getStatus());
 
-        dto.setId(entity.getId());
-        dto.setTitle(entity.getTitle());
-        dto.setOwner(entity.getOwner().getId());
-        dto.setStatus(entity.getStatus());
-
-        return dto;
     }
 }

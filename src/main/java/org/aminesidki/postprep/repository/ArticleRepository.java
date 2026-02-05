@@ -17,6 +17,7 @@ import java.util.UUID;
 */
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
+    List<Article> findByOwner(AppUser user);
 
     @Query(value = "SELECT TO_CHAR(created_at, 'YYYY-MM-DD') as dateLabel, COUNT(*) as count " +
             "FROM article " +
