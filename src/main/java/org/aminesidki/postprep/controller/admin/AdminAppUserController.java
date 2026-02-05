@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/admin/users")
+@RequestMapping("api/v1/admin/users")
+@PreAuthorize("hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class AdminAppUserController {
     private final AppUserService appUserService;
