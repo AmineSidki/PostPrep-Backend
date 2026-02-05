@@ -1,5 +1,8 @@
 package org.aminesidki.postprep.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.aminesidki.postprep.enumeration.Role;
 
@@ -15,11 +18,20 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AppUserDTO implements Serializable {
 
+    @EqualsAndHashCode.Include
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
+
+    @NotEmpty
     private String username;
+    @NotEmpty
+    @Email
     private String email;
+    @NotEmpty
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Role role;
 
 }

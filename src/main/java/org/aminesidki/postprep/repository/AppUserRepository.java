@@ -23,6 +23,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
     Optional<AppUser> findByRefreshToken(String refreshToken);
 
     Boolean existsByEmail(String email);
+    Boolean existsByUsername(String username);
 
     @Modifying
     @Transactional

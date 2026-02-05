@@ -1,5 +1,7 @@
 package org.aminesidki.postprep.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.aminesidki.postprep.entity.OutputJson;
 import org.aminesidki.postprep.enumeration.Status;
@@ -16,14 +18,23 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ArticleDTO implements Serializable {
 
+    @EqualsAndHashCode.Include
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UUID id;
+    @NotEmpty
     private String title;
+    @NotEmpty
     private String language;
+    @NotEmpty
     private UUID owner;
+    @NotEmpty
     private Status status;
+    @NotEmpty
     private OutputJson outputJson;
+    @NotEmpty
     private Timestamp createdAt;
 
 }

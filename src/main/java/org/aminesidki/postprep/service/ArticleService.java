@@ -25,54 +25,54 @@ import java.util.UUID;
 @Service
 @Transactional
 public class ArticleService{
-    private final ArticleRepository repository;
+    private final ArticleRepository articleRepository;
     private final ArticleMapper articleMapper;
     private final AppUserMapper userMapper;
 
     public ArticleDTO findById(UUID id) {
-        return repository.findById(id)
+        return articleRepository.findById(id)
                 .map(articleMapper::toDto)
                 .orElseThrow(() -> new NotFoundException("Article not found with id: " + id));
     }
 
     public List< ArticleDTO> findAll() {
-        return repository.findAll().stream()
+        return articleRepository.findAll().stream()
                 .map(articleMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public List<LiteArticleDTO> findAllByOwner(AppUserDTO owner){
-        return repository.findByOwner(userMapper.toEntity(owner));
+        return articleRepository.findByOwner(userMapper.toEntity(owner));
     }
 
     public ArticleDTO save(ArticleDTO dto) {
         Article entity = articleMapper.toEntity(dto);
-        return articleMapper.toDto(repository.save(entity));
+        return articleMapper.toDto(articleRepository.save(entity));
     }
 
     public boolean delete(AppUserDTO user , UUID id) {
-        if(!repository.findById(id).orElseThrow(() -> new NotFoundException("Cannot delete: Article not found with id " + id))
+        if(!articleRepository.findById(id).orElseThrow(() -> new NotFoundException("Cannot delete: Article not found with id " + id))
                 .getOwner()
                 .getId().equals(user.getId())){
             return false;
         }
-        repository.deleteById(id);
+        articleRepository.deleteById(id);
         return true;
     }
 
     public void deleteById(UUID id) {
-        repository.deleteById(id);
+        articleRepository.deleteById(id);
     }
 
     public long  count() {
-        return repository.count();
+        return articleRepository.count();
     }
 
     public List<ChartDataDTO> getDailyArticleStats() {
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
         Timestamp startDate = Timestamp.valueOf(thirtyDaysAgo);
 
-        List<Object[]> rawData = repository.countArticlesPerDay(startDate);
+        List<Object[]> rawData = articleRepository.countArticlesPerDay(startDate);
 
         return mapToDTO(rawData);
     }
@@ -81,7 +81,7 @@ public class ArticleService{
         LocalDateTime oneYearAgo = LocalDateTime.now().minusMonths(12);
         Timestamp startDate = Timestamp.valueOf(oneYearAgo);
 
-        List<Object[]> rawData = repository.countArticlesPerMonth(startDate);
+        List<Object[]> rawData = articleRepository.countArticlesPerMonth(startDate);
 
         return mapToDTO(rawData);
     }

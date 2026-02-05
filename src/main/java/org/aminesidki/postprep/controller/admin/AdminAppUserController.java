@@ -1,5 +1,6 @@
 package org.aminesidki.postprep.controller.admin;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.aminesidki.postprep.dto.AppUserDTO;
 import org.aminesidki.postprep.service.AppUserService;
@@ -32,7 +33,7 @@ public class AdminAppUserController {
     }
 
     @PutMapping("/{id}")
-    public AppUserDTO updateAppUser(@PathVariable UUID id, @RequestBody AppUserDTO appUserDTO) {
+    public AppUserDTO updateAppUser(@PathVariable UUID id,@Valid @RequestBody AppUserDTO appUserDTO) {
         return appUserService.updateUser(id, appUserDTO);
     }
 }
