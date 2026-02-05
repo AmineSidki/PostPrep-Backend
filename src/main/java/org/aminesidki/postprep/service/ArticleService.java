@@ -12,6 +12,7 @@ import org.aminesidki.postprep.mapper.LiteArticleMapper;
 import org.aminesidki.postprep.repository.ArticleRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.aminesidki.postprep.repository.LiteArticleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,7 @@ import java.util.UUID;
 public class ArticleService{
     private final ArticleRepository repository;
     private final ArticleMapper articleMapper;
-    private final LiteArticleMapper liteArticleMapper;
+    private final LiteArticleRepository liteArticleRepository;
     private final AppUserMapper userMapper;
 
     public ArticleDTO findById(UUID id) {
@@ -44,7 +45,7 @@ public class ArticleService{
     }
 
     public List<LiteArticleDTO> findAllByOwner(AppUserDTO owner) {
-        return repository.findByOwner(userMapper.toEntity(owner));
+        return liteArticleRepository.findByOwner(userMapper.toEntity(owner));
     }
 
     public ArticleDTO save(ArticleDTO dto) {
