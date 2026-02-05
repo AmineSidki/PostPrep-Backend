@@ -27,20 +27,13 @@ public class AuthController {
     private final JwtProperties jwtProperties;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginRequestDTO loginRequest) {
+    public ResponseEntity<Void> login(@RequestBody @Valid LoginRequestDTO loginRequest) {
         Token token = tokenService.login(loginRequest);
-
-        AppUser user = appUserService.findUserByEmail(loginRequest.getEmail());
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, CookieUtils.genCookie("access_token", token.getAccess_token(), jwtProperties.accessTokenExpirationDuration().toSeconds(), "/").toString())
                 .header(HttpHeaders.SET_COOKIE, CookieUtils.genCookie("refresh_token", token.getRefresh_token(), jwtProperties.refreshTokenExpirationDuration().toSeconds(), "/api/v1/auth/refresh").toString())
-                .body(Map.of(
-                        "message", "Logged in successfully",
-                        "id", user.getId(),
-                        "email", user.getEmail(),
-                        "role", user.getRole()
-                ));
+                .build();
     }
 
     @PostMapping("/refresh")

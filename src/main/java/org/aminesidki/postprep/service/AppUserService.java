@@ -19,92 +19,114 @@ import java.util.stream.Collectors;
 
 import java.util.UUID;
 
-import static org.aminesidki.postprep.enumeration.Role.ADMIN;
-
 @RequiredArgsConstructor
 @Service
 public class AppUserService{
-    private final AppUserRepository repository;
+    private final AppUserRepository appUserRepository;
     private final AppUserMapper mapper;
     private final PasswordEncoder passwordEncoder;
 
     public AppUserDTO findById(UUID id) {
-        return repository.findById(id)
+        return appUserRepository.findById(id)
                 .map(mapper::toDto)
                 .orElseThrow(() -> new NotFoundException("AppUser not found with id: " + id));
     }
 
     public List< AppUserDTO> findAll() {
-        return repository.findAll().stream()
+        return appUserRepository.findAll().stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
     }
 
     public void delete(UUID id) {
-        if (!repository.existsById(id)) {
+        if (!appUserRepository.existsById(id)) {
             throw new NotFoundException("Cannot delete: AppUser not found with id: " + id);
         }
-        repository.deleteById(id);
+        appUserRepository.deleteById(id);
     }
 
     public AppUserDTO findByEmail(@NonNull String email) {
-        return repository.findByEmail(email)
+        return appUserRepository.findByEmail(email)
                 .map(mapper::toDto)
                 .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
     }
 
     public AppUser findUserByEmail(@NonNull String email) {
-        return repository.findByEmail(email)
+        return appUserRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
     }
 
     public void register(RegisterRequestDTO request) {
-        if (repository.existsByEmail(request.getEmail())) {
+        String sanitizedEmail = request.getEmail().trim().toLowerCase();
+        String sanitizedUsername = request.getUsername().trim();
+
+        if (appUserRepository.existsByEmail(sanitizedEmail)) {
             throw new RuntimeException("Email already exists");
         }
 
-        AppUser user = new AppUser();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
+        if (appUserRepository.existsByUsername(sanitizedUsername)) {
+            throw new RuntimeException("Username already exists");
+        }
 
-        repository.save(user);
+        AppUser user = AppUser.builder()
+                .username(sanitizedUsername)
+                .email(sanitizedEmail)
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
+                .build();
+
+        appUserRepository.save(user);
     }
 
     public AppUser findByRefreshToken(String refreshToken) {
-        return repository.findByRefreshToken(refreshToken)
+        return appUserRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     public void updateRefreshToken(String email, String token) {
         AppUser appUser = findUserByEmail(email);
         appUser.setRefreshToken(token);
-        repository.save(appUser);
+        appUserRepository.save(appUser);
     }
 
     public void logout(UUID userId) {
-        repository.invalidateRefreshToken(userId);
+        appUserRepository.invalidateRefreshToken(userId);
     }
 
     public long  count() {
-        return repository.count();
+        return appUserRepository.count();
     }
 
+    @Transactional
     public AppUserDTO updateUser(UUID id, AppUserDTO dto) {
-        AppUser user = repository.findById(id).orElseThrow(() -> new NotFoundException("User not found with id: " + id));
-        if(dto.getUsername() != null) {
-            user.setUsername(dto.getUsername());
-        }
-        if(dto.getEmail() != null && !dto.getEmail().equals(user.getEmail())) {
-            if(repository.existsByEmail(dto.getEmail())) {
-                throw new RuntimeException("Email already exists");
+        AppUser user = appUserRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
+
+        String newUsername = dto.getUsername().trim();
+
+        if (!user.getUsername().equals(newUsername)) {
+            if (appUserRepository.existsByUsername(newUsername)) {
+                throw new RuntimeException("Username already exists");
             }
-            user.setEmail(dto.getEmail());
+            user.setUsername(newUsername);
         }
 
-        return mapper.toDto(repository.save(user));
+        String newEmail = dto.getEmail().trim().toLowerCase();
+
+        if (!user.getEmail().equalsIgnoreCase(newEmail)) {
+            validateEmailUniqueness(newEmail);
+            user.setEmail(newEmail);
+        }
+
+        return mapper.toDto(appUserRepository.save(user));
     }
+
+    private void validateEmailUniqueness(String email) {
+        if (appUserRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email already exists");
+        }
+    }
+
 }
 
 //Generated by Sprout
