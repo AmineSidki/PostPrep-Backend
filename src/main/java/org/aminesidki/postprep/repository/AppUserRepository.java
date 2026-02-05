@@ -17,9 +17,6 @@ import java.util.UUID;
 */
 @Repository
 public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
-    @Query("SELECT u FROM AppUser u LEFT JOIN FETCH u.articles WHERE u.email = :email")
-    Optional<AppUser> findByEmailWithArticles(@Param("email") String email);
-
     Optional<AppUser> findByEmail(String email);
     Optional<AppUser> findByRefreshToken(String refreshToken);
 

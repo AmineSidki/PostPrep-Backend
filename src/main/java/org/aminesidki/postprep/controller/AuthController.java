@@ -25,7 +25,6 @@ public class AuthController {
     private final TokenService tokenService;
     private final AppUserService appUserService;
     private final JwtProperties jwtProperties;
-    private final AppUserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody @Valid LoginRequestDTO loginRequest) {
