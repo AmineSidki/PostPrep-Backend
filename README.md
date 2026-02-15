@@ -7,7 +7,7 @@ Google Gemini
 
 ## 🔗 Live Demo
 
-[https://aminesidki.postprep.hf.space](https://aminesidki.postprep.hf.space/)
+[https://aminesidki-postprep.hf.space](https://aminesidki-postprep.hf.space/)
 
 ## ✨ Core Features
 
