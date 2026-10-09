@@ -9,7 +9,7 @@ spring:
       chat:
         base-url: https://router.huggingface.co/v1
         options:
-          model: Qwen/Qwen2.5-7B-Instruct
+          model: Qwen/Qwen3.5-9B
     embedding:
       transformer:
         onnx:
