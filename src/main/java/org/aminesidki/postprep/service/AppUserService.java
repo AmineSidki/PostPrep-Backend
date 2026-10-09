@@ -20,18 +20,21 @@ import java.util.stream.Collectors;
 import java.util.UUID;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class AppUserService{
     private final AppUserRepository appUserRepository;
     private final AppUserMapper mapper;
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional(readOnly = true)
     public AppUserDTO findById(UUID id) {
         return appUserRepository.findById(id)
                 .map(mapper::toDto)
                 .orElseThrow(() -> new NotFoundException("AppUser not found with id: " + id));
     }
 
+    @Transactional(readOnly = true)
     public List< AppUserDTO> findAll() {
         return appUserRepository.findAll().stream()
                 .map(mapper::toDto)
@@ -45,12 +48,14 @@ public class AppUserService{
         appUserRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public AppUserDTO findByEmail(@NonNull String email) {
         return appUserRepository.findByEmail(email)
                 .map(mapper::toDto)
                 .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
     }
 
+    @Transactional(readOnly = true)
     public AppUser findUserByEmail(@NonNull String email) {
         return appUserRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("AppUser not found with email: " + email));
@@ -78,6 +83,7 @@ public class AppUserService{
         appUserRepository.save(user);
     }
 
+    @Transactional(readOnly = true)
     public AppUser findByRefreshToken(String refreshToken) {
         return appUserRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new NotFoundException("User not found"));
@@ -93,11 +99,11 @@ public class AppUserService{
         appUserRepository.invalidateRefreshToken(userId);
     }
 
+    @Transactional(readOnly = true)
     public long  count() {
         return appUserRepository.count();
     }
 
-    @Transactional
     public AppUserDTO updateUser(UUID id, AppUserDTO dto) {
         AppUser user = appUserRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
@@ -121,6 +127,7 @@ public class AppUserService{
         return mapper.toDto(appUserRepository.save(user));
     }
 
+    @Transactional(readOnly = true)
     private void validateEmailUniqueness(String email) {
         if (appUserRepository.existsByEmail(email)) {
             throw new RuntimeException("Email already exists");

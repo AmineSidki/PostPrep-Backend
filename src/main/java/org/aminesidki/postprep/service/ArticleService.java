@@ -46,22 +46,21 @@ public class ArticleService{
                 null);
     }
 
+    @Transactional(readOnly = true)
     public ArticleDTO findById(UUID id) {
         return articleRepository.findById(id)
                 .map(articleMapper::toDto)
                 .orElseThrow(() -> new NotFoundException("Article not found with id: " + id));
     }
 
-    public List< ArticleDTO> findAll() {
-        return articleRepository.findAll().stream()
-                .map(articleMapper::toDto)
-                .collect(Collectors.toList());
+    @Transactional(readOnly = true)
+    public List<LiteArticleDTO> findAll() {
+        return articleRepository.findAllProjected();
     }
 
+    @Transactional(readOnly = true)
     public List<LiteArticleDTO> findAllByOwner(AppUserDTO owner){
-        return articleRepository.findByOwner(userMapper.toEntity(owner)).stream()
-                .map(liteArticleMapper::toDto)
-                .collect(Collectors.toList());
+        return articleRepository.findAllByOwnerProjected(userMapper.toEntity(owner));
     }
 
     public ArticleDTO save(ArticleDTO dto) {
@@ -83,10 +82,12 @@ public class ArticleService{
         articleRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     public long  count() {
         return articleRepository.count();
     }
 
+    @Transactional(readOnly = true)
     public List<ChartDataDTO> getDailyArticleStats() {
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
         Timestamp startDate = Timestamp.valueOf(thirtyDaysAgo);
@@ -96,6 +97,7 @@ public class ArticleService{
         return mapToDTO(rawData);
     }
 
+    @Transactional(readOnly = true)
     public List<ChartDataDTO> getMonthlyArticleStats() {
         LocalDateTime oneYearAgo = LocalDateTime.now().minusMonths(12);
         Timestamp startDate = Timestamp.valueOf(oneYearAgo);
