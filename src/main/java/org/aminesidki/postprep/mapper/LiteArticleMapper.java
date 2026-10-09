@@ -1,6 +1,6 @@
 package org.aminesidki.postprep.mapper;
 
-import org.aminesidki.postprep.dto.LiteArticleDTO;
+import org.aminesidki.postprep.dto.lite.LiteArticleDTO;
 import org.aminesidki.postprep.entity.Article;
 import org.springframework.stereotype.Component;
 

@@ -2,7 +2,7 @@ package org.aminesidki.postprep.controller.admin;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.aminesidki.postprep.dto.AppUserDTO;
+import org.aminesidki.postprep.dto.regular.AppUserDTO;
 import org.aminesidki.postprep.service.AppUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

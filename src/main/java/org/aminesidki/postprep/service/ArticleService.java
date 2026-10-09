@@ -1,10 +1,11 @@
 package org.aminesidki.postprep.service;
 
-import org.aminesidki.postprep.dto.AppUserDTO;
-import org.aminesidki.postprep.dto.LiteArticleDTO;
-import org.aminesidki.postprep.dto.ChartDataDTO;
+import org.aminesidki.postprep.dto.regular.AppUserDTO;
+import org.aminesidki.postprep.dto.lite.LiteArticleDTO;
+import org.aminesidki.postprep.dto.regular.ChartDataDTO;
 import org.aminesidki.postprep.entity.Article;
-import org.aminesidki.postprep.dto.ArticleDTO;
+import org.aminesidki.postprep.dto.regular.ArticleDTO;
+import org.aminesidki.postprep.enumeration.Status;
 import org.aminesidki.postprep.exception.NotFoundException;
 import org.aminesidki.postprep.mapper.AppUserMapper;
 import org.aminesidki.postprep.mapper.ArticleMapper;
@@ -30,6 +31,20 @@ public class ArticleService{
     private final ArticleMapper articleMapper;
     private final LiteArticleMapper liteArticleMapper;
     private final AppUserMapper userMapper;
+
+    public ArticleDTO savePending(UUID owner){
+        return save(createPending(owner));
+    }
+
+    private ArticleDTO createPending(UUID owner){
+        return new ArticleDTO(null,
+                null,
+                null,
+                owner,
+                Status.PROCESSING,
+                null,
+                null);
+    }
 
     public ArticleDTO findById(UUID id) {
         return articleRepository.findById(id)
@@ -57,7 +72,7 @@ public class ArticleService{
     public boolean delete(AppUserDTO user , UUID id) {
         if(!articleRepository.findById(id).orElseThrow(() -> new NotFoundException("Cannot delete: Article not found with id " + id))
                 .getOwner()
-                .getId().equals(user.getId())){
+                .getId().equals(user.id())){
             return false;
         }
         articleRepository.deleteById(id);

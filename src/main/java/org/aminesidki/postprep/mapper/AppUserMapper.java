@@ -1,7 +1,7 @@
 package org.aminesidki.postprep.mapper;
 
 import org.aminesidki.postprep.entity.AppUser;
-import org.aminesidki.postprep.dto.AppUserDTO;
+import org.aminesidki.postprep.dto.regular.AppUserDTO;
 import org.aminesidki.postprep.repository.ArticleRepository;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;

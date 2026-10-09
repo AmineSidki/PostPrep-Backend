@@ -33,7 +33,6 @@ public class AppUser {
     private String email;
 
     @NonNull
-
     private String password;
     @NonNull
     private Role role;

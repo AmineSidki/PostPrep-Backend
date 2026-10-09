@@ -1,6 +1,5 @@
 package org.aminesidki.postprep.repository;
 
-import org.aminesidki.postprep.dto.LiteArticleDTO;
 import org.aminesidki.postprep.entity.AppUser;
 import org.aminesidki.postprep.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;

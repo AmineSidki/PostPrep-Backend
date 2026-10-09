@@ -2,9 +2,8 @@ package org.aminesidki.postprep.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.aminesidki.postprep.dto.LoginRequestDTO;
-import org.aminesidki.postprep.dto.RegisterRequestDTO;
-import org.aminesidki.postprep.entity.AppUser;
+import org.aminesidki.postprep.dto.request.LoginRequestDTO;
+import org.aminesidki.postprep.dto.request.RegisterRequestDTO;
 import org.aminesidki.postprep.properties.JwtProperties;
 import org.aminesidki.postprep.security.CustomUserDetails;
 import org.aminesidki.postprep.service.AppUserService;
@@ -54,7 +53,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@AuthenticationPrincipal CustomUserDetails principal) {
         if (principal != null && principal.getAppUser() != null) {
-            appUserService.logout(principal.getAppUser().getId());
+            appUserService.logout(principal.getAppUser().id());
         }
 
         return ResponseEntity.ok()

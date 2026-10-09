@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aminesidki.postprep.dto.AiAnalysisResult;
-import org.aminesidki.postprep.dto.ArticleDTO;
+import org.aminesidki.postprep.dto.regular.AiAnalysisResultDTO;
+import org.aminesidki.postprep.dto.regular.ArticleDTO;
 import org.aminesidki.postprep.entity.OutputJson;
 import org.aminesidki.postprep.enumeration.Status;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -44,21 +44,27 @@ public class TextProcessingService {
             ArticleDTO articleDTO =  articleService.findById(documentId);
         try{
             AnalysisResponse processedString = process(text);
-            articleDTO.setStatus(Status.PROCESSED);
-            articleDTO.setTitle(processedString.data.title());
-            articleDTO.setLanguage(processedString.data.language());
-
             OutputJson outputJson = new OutputJson(processedString.data.summary(),
                     processedString.data.categories(),
                     processedString.data.seoTitle(),
                     processedString.confidenceScore,
                     processedString.data.keywords());
 
-            articleDTO.setOutputJson(outputJson);
-            articleService.save(articleDTO);
+            articleService.save(new ArticleDTO(articleDTO.id(),
+                    processedString.data.title(),
+                    processedString.data.language(),
+                    articleDTO.owner(),
+                    Status.PROCESSED,
+                    outputJson,
+                    articleDTO.createdAt()));
         }catch(Exception e){
-            articleDTO.setStatus(Status.INTERRUPTED);
-            articleService.save(articleDTO);
+            articleService.save(new ArticleDTO(articleDTO.id(),
+                    null,
+                    null,
+                    articleDTO.owner(),
+                    Status.INTERRUPTED,
+                    null,
+                    articleDTO.createdAt()));
         }
 
     }
@@ -70,8 +76,13 @@ public class TextProcessingService {
             processText(scanned , documentId);
         }catch(Exception e){
             ArticleDTO articleDTO = articleService.findById(documentId);
-            articleDTO.setStatus(Status.INTERRUPTED);
-            articleService.save(articleDTO);
+            articleService.save(new ArticleDTO(articleDTO.id(),
+                    null,
+                    null,
+                    articleDTO.owner(),
+                    Status.INTERRUPTED,
+                    null,
+                    articleDTO.createdAt()));
         }
     }
 
@@ -120,7 +131,7 @@ public class TextProcessingService {
                     .retrieve()
                     .body(String.class);
 
-            AiAnalysisResult result = extractAndParseJson(responseRaw);
+            AiAnalysisResultDTO result = extractAndParseJson(responseRaw);
             double confidence = calculateConfidenceScore(result, rawOcrText);
 
 
@@ -132,7 +143,7 @@ public class TextProcessingService {
         }
     }
 
-    private AiAnalysisResult extractAndParseJson(String rawResponse) throws JsonProcessingException {
+    private AiAnalysisResultDTO extractAndParseJson(String rawResponse) throws JsonProcessingException {
         JsonNode root = aiObjectMapper.readTree(rawResponse);
         if (!root.has("choices") || root.path("choices").isEmpty()) {
             throw new RuntimeException("Invalid LLM response");
@@ -153,10 +164,10 @@ public class TextProcessingService {
                 jsonString = content;
             }
         }
-        return aiObjectMapper.readValue(jsonString, AiAnalysisResult.class);
+        return aiObjectMapper.readValue(jsonString, AiAnalysisResultDTO.class);
     }
 
-    private double calculateConfidenceScore(AiAnalysisResult result, String fullOriginalText) {
+    private double calculateConfidenceScore(AiAnalysisResultDTO result, String fullOriginalText) {
         if (fullOriginalText == null || result == null) return 0.0;
 
         String textToEmbed = String.format("%s %s %s %s",
@@ -208,5 +219,5 @@ public class TextProcessingService {
 
     private record ChatRequest(String model, List<Message> messages, int max_tokens, double temperature) {}
     private record Message(String role, String content) {}
-    public record AnalysisResponse(AiAnalysisResult data, Double confidenceScore) {}
+    public record AnalysisResponse(AiAnalysisResultDTO data, Double confidenceScore) {}
 }

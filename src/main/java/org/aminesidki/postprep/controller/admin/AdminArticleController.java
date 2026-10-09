@@ -1,7 +1,7 @@
 package org.aminesidki.postprep.controller.admin;
 
 import lombok.RequiredArgsConstructor;
-import org.aminesidki.postprep.dto.ArticleDTO;
+import org.aminesidki.postprep.dto.regular.ArticleDTO;
 import org.aminesidki.postprep.service.ArticleService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

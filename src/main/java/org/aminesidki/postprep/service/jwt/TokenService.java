@@ -1,7 +1,7 @@
 package org.aminesidki.postprep.service.jwt;
 
 import lombok.RequiredArgsConstructor;
-import org.aminesidki.postprep.dto.LoginRequestDTO;
+import org.aminesidki.postprep.dto.request.LoginRequestDTO;
 import org.aminesidki.postprep.entity.AppUser;
 import org.aminesidki.postprep.exception.Unauthorized;
 import org.aminesidki.postprep.properties.JwtProperties;

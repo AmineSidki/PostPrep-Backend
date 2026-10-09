@@ -2,8 +2,7 @@ package org.aminesidki.postprep.security;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.aminesidki.postprep.dto.AppUserDTO;
-import org.aminesidki.postprep.mapper.AppUserMapper;
+import org.aminesidki.postprep.dto.regular.AppUserDTO;
 import org.aminesidki.postprep.service.AppUserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

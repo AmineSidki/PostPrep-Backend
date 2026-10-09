@@ -1,9 +1,9 @@
 package org.aminesidki.postprep.service;
 
 import lombok.NonNull;
-import org.aminesidki.postprep.dto.RegisterRequestDTO;
+import org.aminesidki.postprep.dto.request.RegisterRequestDTO;
 import org.aminesidki.postprep.entity.AppUser;
-import org.aminesidki.postprep.dto.AppUserDTO;
+import org.aminesidki.postprep.dto.regular.AppUserDTO;
 import org.aminesidki.postprep.enumeration.Role;
 import org.aminesidki.postprep.exception.NotFoundException;
 import org.aminesidki.postprep.mapper.AppUserMapper;
@@ -102,7 +102,7 @@ public class AppUserService{
         AppUser user = appUserRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found with id: " + id));
 
-        String newUsername = dto.getUsername().trim();
+        String newUsername = dto.username().trim();
 
         if (!user.getUsername().equals(newUsername)) {
             if (appUserRepository.existsByUsername(newUsername)) {
@@ -111,7 +111,7 @@ public class AppUserService{
             user.setUsername(newUsername);
         }
 
-        String newEmail = dto.getEmail().trim().toLowerCase();
+        String newEmail = dto.email().trim().toLowerCase();
 
         if (!user.getEmail().equalsIgnoreCase(newEmail)) {
             validateEmailUniqueness(newEmail);

@@ -1,7 +1,7 @@
 package org.aminesidki.postprep.controller.admin;
 
 import lombok.RequiredArgsConstructor;
-import org.aminesidki.postprep.dto.ChartDataDTO;
+import org.aminesidki.postprep.dto.regular.ChartDataDTO;
 import org.aminesidki.postprep.service.AppUserService;
 import org.aminesidki.postprep.service.ArticleService;
 import org.springframework.http.ResponseEntity;

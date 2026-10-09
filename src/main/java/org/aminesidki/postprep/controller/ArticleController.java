@@ -1,8 +1,8 @@
 package org.aminesidki.postprep.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.aminesidki.postprep.dto.ArticleDTO;
-import org.aminesidki.postprep.dto.LiteArticleDTO;
+import org.aminesidki.postprep.dto.regular.ArticleDTO;
+import org.aminesidki.postprep.dto.lite.LiteArticleDTO;
 import org.aminesidki.postprep.enumeration.Status;
 import org.aminesidki.postprep.security.CustomUserDetails;
 import org.aminesidki.postprep.service.ArticleService;
@@ -42,15 +42,15 @@ public class ArticleController {
 
     @PostMapping("/upload/pdf")
     public ArticleDTO uploadPdf(@AuthenticationPrincipal CustomUserDetails user, @RequestBody MultipartFile pdfFile){
-        ArticleDTO articleDto = articleService.save(ArticleDTO.builder().status(Status.PROCESSING).owner(user.getAppUser().getId()).build());
-        textProcessingService.processPdf(pdfFile , articleDto.getId());
+        ArticleDTO articleDto = articleService.savePending(user.getAppUser().id());
+        textProcessingService.processPdf(pdfFile , articleDto.id());
         return articleDto;
     }
 
     @PostMapping("/upload/text")
     public ArticleDTO uploadText(@AuthenticationPrincipal CustomUserDetails user, @RequestBody String text){
-        ArticleDTO articleDto = articleService.save(ArticleDTO.builder().status(Status.PROCESSING).owner(user.getAppUser().getId()).build());
-        textProcessingService.processText(text , articleDto.getId());
+        ArticleDTO articleDto = articleService.savePending(user.getAppUser().id());
+        textProcessingService.processText(text , articleDto.id());
         return articleDto;
     }
 

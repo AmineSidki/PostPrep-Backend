@@ -2,7 +2,7 @@ package org.aminesidki.postprep.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.aminesidki.postprep.dto.AppUserDTO;
+import org.aminesidki.postprep.dto.regular.AppUserDTO;
 import org.aminesidki.postprep.enumeration.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,7 +18,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Role role = appUser.getRole();
+        Role role = appUser.role();
         return (role != null)
                 ? List.of(new SimpleGrantedAuthority("ROLE_"+ role))
                 : List.of();
@@ -31,6 +31,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return appUser.getEmail();
+        return appUser.email();
     }
 }

@@ -1,7 +1,7 @@
 package org.aminesidki.postprep.mapper;
 
 import org.aminesidki.postprep.entity.Article;
-import org.aminesidki.postprep.dto.ArticleDTO;
+import org.aminesidki.postprep.dto.regular.ArticleDTO;
 import org.aminesidki.postprep.exception.NotFoundException;
 import org.aminesidki.postprep.repository.AppUserRepository;
 import org.springframework.stereotype.Component;

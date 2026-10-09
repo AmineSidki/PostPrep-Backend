@@ -1,4 +1,4 @@
-package org.aminesidki.postprep.dto;
+package org.aminesidki.postprep.dto.lite;
 
 import org.aminesidki.postprep.enumeration.Status;
 
