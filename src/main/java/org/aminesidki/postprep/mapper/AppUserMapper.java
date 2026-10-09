@@ -21,10 +21,10 @@ public class AppUserMapper {
 
         AppUser entity = new AppUser();
 
-        entity.setId(dto.getId());
-        entity.setUsername(dto.getUsername());
-        entity.setEmail(dto.getEmail());
-        entity.setRole(dto.getRole());
+        entity.setId(dto.id());
+        entity.setUsername(dto.username());
+        entity.setEmail(dto.email());
+        entity.setRole(dto.role());
 
         return entity;
     }
@@ -34,14 +34,10 @@ public class AppUserMapper {
             return null;
         }
 
-        AppUserDTO dto = new AppUserDTO();
-
-        dto.setId(entity.getId());
-        dto.setUsername(entity.getUsername());
-        dto.setEmail(entity.getEmail());
-        dto.setRole(entity.getRole());
-
-        return dto;
+        return new AppUserDTO(entity.getId(),
+                entity.getUsername(),
+                entity.getEmail(),
+                entity.getRole());
     }
 }
 

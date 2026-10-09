@@ -7,6 +7,8 @@ import org.aminesidki.postprep.repository.AppUserRepository;
 import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Objects;
+
 
 /**
 * Mapper for {@link org.aminesidki.postprep.entity.Article }
@@ -22,13 +24,13 @@ public class ArticleMapper {
 
         Article entity = new Article();
 
-        entity.setId(dto.getId());
-        entity.setTitle(dto.getTitle());
-        entity.setLanguage(dto.getLanguage());
-        entity.setOwner(appUserRepository.findById(dto.getOwner()).orElseThrow(() -> new NotFoundException("User with id " + dto.getOwner() + "not found !")));
-        entity.setOutputJson(dto.getOutputJson());
-        entity.setStatus(dto.getStatus());
-        entity.setCreatedAt(dto.getCreatedAt());
+        entity.setId(dto.id());
+        entity.setTitle(dto.title());
+        entity.setLanguage(dto.language());
+        entity.setOwner(Objects.requireNonNull(appUserRepository.getReferenceById(dto.owner())));
+        entity.setOutputJson(dto.outputJson());
+        entity.setStatus(dto.status());
+        entity.setCreatedAt(dto.createdAt());
 
 
         return entity;
@@ -39,18 +41,13 @@ public class ArticleMapper {
             return null;
         }
 
-        ArticleDTO dto = new ArticleDTO();
-
-        dto.setId(entity.getId());
-        dto.setTitle(entity.getTitle());
-        dto.setLanguage(entity.getLanguage());
-        dto.setOwner(entity.getOwner().getId());
-        dto.setOutputJson(entity.getOutputJson());
-        dto.setStatus(entity.getStatus());
-        dto.setCreatedAt(entity.getCreatedAt());
-
-
-        return dto;
+        return new ArticleDTO(entity.getId(),
+                entity.getTitle(),
+                entity.getLanguage(),
+                entity.getOwner().getId(),
+                entity.getStatus(),
+                entity.getOutputJson(),
+                entity.getCreatedAt());
     }
 }
 
