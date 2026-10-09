@@ -1,6 +1,7 @@
 package org.aminesidki.postprep.controller.admin;
 
 import lombok.RequiredArgsConstructor;
+import org.aminesidki.postprep.dto.lite.LiteArticleDTO;
 import org.aminesidki.postprep.dto.regular.ArticleDTO;
 import org.aminesidki.postprep.service.ArticleService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +18,7 @@ public class AdminArticleController {
     private final ArticleService articleService;
 
     @GetMapping
-    public List<ArticleDTO> getArticles() {
+    public List<LiteArticleDTO> getArticles() {
         return articleService.findAll();
     }
 

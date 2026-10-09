@@ -25,7 +25,7 @@ public class ArticleController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<ArticleDTO> getAll(){
+    public List<LiteArticleDTO> getAll(){
         return articleService.findAll();
     }
 
