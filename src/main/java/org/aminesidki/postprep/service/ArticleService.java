@@ -60,7 +60,7 @@ public class ArticleService{
 
     @Transactional(readOnly = true)
     public List<LiteArticleDTO> findAllByOwner(AppUserDTO owner){
-        return articleRepository.findAllByOwnerProjected(userMapper.toEntity(owner));
+        return articleRepository.findAllByOwnerProjected(owner.id());
     }
 
     public ArticleDTO save(ArticleDTO dto) {

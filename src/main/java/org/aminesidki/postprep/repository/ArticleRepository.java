@@ -22,8 +22,8 @@ public interface ArticleRepository extends JpaRepository<Article, UUID> {
     @Query(value = "SELECT new org.aminesidki.postprep.dto.lite.LiteArticleDTO(a.id, a.title, a.owner.id, a.status) FROM Article a")
     List<LiteArticleDTO> findAllProjected();
 
-    @Query(value = "SELECT new org.aminesidki.postprep.dto.lite.LiteArticleDTO(a.id, a.title, a.owner.id, a.status) from Article a where a.owner.id = user.id")
-    List<LiteArticleDTO> findAllByOwnerProjected(@Param("user") AppUser user);
+    @Query(value = "SELECT new org.aminesidki.postprep.dto.lite.LiteArticleDTO(a.id, a.title, a.owner.id, a.status) from Article a where a.owner.id = :user")
+    List<LiteArticleDTO> findAllByOwnerProjected(@Param("user") UUID user);
 
     @Query(value = "SELECT TO_CHAR(created_at, 'YYYY-MM-DD') as dateLabel, COUNT(*) as count " +
             "FROM article " +
